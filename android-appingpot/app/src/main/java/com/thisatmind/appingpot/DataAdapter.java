@@ -39,6 +39,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     public void onBindViewHolder(DataAdapter.ViewHolder viewHolder, int i) {
 
         viewHolder.appName.setText(pm.getApplicationLabel(apps.get(i)).toString());
+        viewHolder.appPackageName.setText(apps.get(i).packageName);
         viewHolder.appImg.setImageDrawable(pm.getApplicationIcon(apps.get(i)));
     }
 
@@ -49,11 +50,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView appName;
+        private TextView appPackageName;
         private ImageView appImg;
+
         public ViewHolder(View view) {
             super(view);
             appImg = (ImageView)view.findViewById(R.id.appImg);
             appName = (TextView)view.findViewById(R.id.appName);
+            appPackageName = (TextView)view.findViewById(R.id.appPackageName);
         }
     }
 
