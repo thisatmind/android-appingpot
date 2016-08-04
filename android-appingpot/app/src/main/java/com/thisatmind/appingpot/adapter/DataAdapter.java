@@ -1,4 +1,4 @@
-package com.thisatmind.appingpot;
+package com.thisatmind.appingpot.adapter;
 
 /**
  * Created by Patrick on 2016-08-03.
@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.thisatmind.appingpot.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,7 @@
 package com.thisatmind.appingpot.actracker;
 
 import android.app.Activity;
+import android.app.usage.UsageStatsManager;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
@@ -29,6 +30,12 @@ public class Tracker {
 //            Log.d(TAG, "ClassName : " + packageInfo.className );
 //            Log.d(TAG, "Launch Activity :" + pm.getLaunchIntentForPackage(packageInfo.packageName));
 //        }
+    }
+
+    public void getAppUsageList(Activity activity){
+
+
 
     }
+
 }

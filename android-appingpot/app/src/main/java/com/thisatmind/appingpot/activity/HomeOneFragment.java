@@ -1,47 +1,71 @@
-package com.thisatmind.appingpot;
+package com.thisatmind.appingpot.activity;
 
+import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.thisatmind.appingpot.R;
 import com.thisatmind.appingpot.actracker.Tracker;
+import com.thisatmind.appingpot.adapter.DataAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * Created by Patrick on 2016-08-04.
+ */
+public class HomeOneFragment extends Fragment {
+
 
     private ArrayList<String> countries;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initViews();
+    public HomeOneFragment() {
+        // Required empty public constructor
     }
 
-    private void initViews(){
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.card_recycler_view);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Log.d("here","1");
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.d("here","2");
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_one_home, container, false);
+
+        // RecyclerView
+        final Activity activity = ((AppCompatActivity)getActivity());
+
+        RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.card_recycler_view);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity.getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
 
+        Log.d("here","3");
         Tracker tracker  = new Tracker();
-        final List<ApplicationInfo> appList = tracker.getInstalledAppList(this);
-        PackageManager pm = getPackageManager();
+        final List<ApplicationInfo> appList = tracker.getInstalledAppList(activity);
+        PackageManager pm = activity.getPackageManager();
 
         RecyclerView.Adapter adapter = new DataAdapter(appList, pm);
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            GestureDetector gestureDetector = new GestureDetector(getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
+            GestureDetector gestureDetector = new GestureDetector(activity.getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
 
                 @Override public boolean onSingleTapUp(MotionEvent e) {
                     return true;
@@ -54,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if(child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
-                    Toast.makeText(getApplicationContext(), getPackageManager().getApplicationLabel(appList.get(position)).toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), activity.getPackageManager().getApplicationLabel(appList.get(position)).toString(), Toast.LENGTH_SHORT).show();
                 }
 
                 return false;
@@ -70,6 +94,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        return rootView;
     }
 }
-
