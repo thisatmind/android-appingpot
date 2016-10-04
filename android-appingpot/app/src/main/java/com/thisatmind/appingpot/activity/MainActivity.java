@@ -12,6 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.thisatmind.appingpot.R;
+import com.thisatmind.appingpot.fragment.FragmentDrawer;
+import com.thisatmind.appingpot.fragment.FriendsFragment;
+import com.thisatmind.appingpot.fragment.HomeFragment;
+import com.thisatmind.appingpot.fragment.MessagesFragment;
 
 public class MainActivity extends AppCompatActivity  implements FragmentDrawer.FragmentDrawerListener{
 
@@ -26,30 +30,10 @@ public class MainActivity extends AppCompatActivity  implements FragmentDrawer.F
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-    @Override
     public void onDrawerItemSelected(View view, int position) {
         displayView(position);
     }
+
     private void displayView(int position) {
         Fragment fragment = null;
         String title = getString(R.string.app_name);
@@ -80,6 +64,7 @@ public class MainActivity extends AppCompatActivity  implements FragmentDrawer.F
             getSupportActionBar().setTitle(title);
         }
     }
+
     private void initViews(){
 
         // toolbar
@@ -96,8 +81,28 @@ public class MainActivity extends AppCompatActivity  implements FragmentDrawer.F
 
         // display the first navigation drawer view on app launch
         displayView(0);
-
-
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }
 

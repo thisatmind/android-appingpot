@@ -1,4 +1,4 @@
-package com.thisatmind.appingpot.activity;
+package com.thisatmind.appingpot.fragment;
 
 import android.content.Context;
 import android.os.Bundle;

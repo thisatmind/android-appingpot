@@ -1,4 +1,4 @@
-package com.thisatmind.appingpot.activity;
+package com.thisatmind.appingpot.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,9 +12,9 @@ import com.thisatmind.appingpot.R;
 /**
  * Created by Patrick on 2016-08-04.
  */
-public class MessagesFragment extends Fragment {
+public class FriendsFragment extends Fragment {
 
-    public MessagesFragment() {
+    public FriendsFragment() {
         // Required empty public constructor
     }
 
@@ -27,7 +27,7 @@ public class MessagesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_messages, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_friends, container, false);
 
 
         // Inflate the layout for this fragment

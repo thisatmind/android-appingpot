@@ -1,4 +1,4 @@
-package com.thisatmind.appingpot.activity;
+package com.thisatmind.appingpot.fragment;
 
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
@@ -44,7 +44,7 @@ public class HomeOneFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("here","2");
+        Log.d("HomeOneFragment", "onCreateView");
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_one_home, container, false);
 
@@ -56,7 +56,6 @@ public class HomeOneFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity.getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        Log.d("here","3");
         Tracker tracker  = new Tracker();
         final List<ApplicationInfo> appList = tracker.getInstalledAppList(activity);
         PackageManager pm = activity.getPackageManager();
