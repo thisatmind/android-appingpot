@@ -1,6 +1,7 @@
 package com.thisatmind.appingpot.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -14,9 +15,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.thisatmind.appingpot.R;
+import com.thisatmind.appingpot.activity.LoginActivity;
 import com.thisatmind.appingpot.actracker.Tracker;
 import com.thisatmind.appingpot.adapter.DataAdapter;
 
@@ -45,9 +49,20 @@ public class HomeOneFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d("HomeOneFragment", "onCreateView");
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_one_home, container, false);
 
+        // logout button
+        Button logoutBtn = (Button) rootView.findViewById(R.id.logoutBtn);
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getContext(),LoginActivity.class));
+                getActivity().finish();
+            }
+        });
         // RecyclerView
         final Activity activity = ((AppCompatActivity)getActivity());
 

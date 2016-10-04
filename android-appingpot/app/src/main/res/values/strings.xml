@@ -19,4 +19,9 @@
     <string name="title_messages">Messages</string>
     <string name="title_friends">Friends</string>
     <string name="title_home">Home</string>
+
+    <!-- facebook config -->
+    <string name="facebook_app_id">1167783676596070</string>
+    <string name="facebook_application_id" translatable="false">1167783676596070</string>
+
 </resources>

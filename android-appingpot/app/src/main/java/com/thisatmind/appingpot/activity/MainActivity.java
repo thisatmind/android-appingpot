@@ -1,5 +1,8 @@
 package com.thisatmind.appingpot.activity;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,6 +10,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +21,9 @@ import com.thisatmind.appingpot.fragment.FragmentDrawer;
 import com.thisatmind.appingpot.fragment.FriendsFragment;
 import com.thisatmind.appingpot.fragment.HomeFragment;
 import com.thisatmind.appingpot.fragment.MessagesFragment;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity  implements FragmentDrawer.FragmentDrawerListener{
 
@@ -29,6 +37,29 @@ public class MainActivity extends AppCompatActivity  implements FragmentDrawer.F
         initViews();
     }
 
+    private String getSignature(){
+        // signature
+        PackageInfo info;
+        try {
+            info = getPackageManager().getPackageInfo("com.thisatmind.appingpot", PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String something = new String(Base64.encode(md.digest(), 0));
+                //String something = new String(Base64.encodeBytes(md.digest()));
+                Log.e("HashKey", something);
+                return something;
+            }
+        } catch (PackageManager.NameNotFoundException e1) {
+            Log.e("name not found", e1.toString());
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("no such an algorithm", e.toString());
+        } catch (Exception e) {
+            Log.e("exception", e.toString());
+        }
+        return null;
+    }
     @Override
     public void onDrawerItemSelected(View view, int position) {
         displayView(position);
