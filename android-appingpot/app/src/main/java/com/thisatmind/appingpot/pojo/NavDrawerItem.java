@@ -1,4 +1,4 @@
-package com.thisatmind.appingpot.model;
+package com.thisatmind.appingpot.pojo;
 
 /**
  * Created by Patrick on 2016-08-04.

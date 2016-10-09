@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.thisatmind.appingpot.R;
-import com.thisatmind.appingpot.model.NavDrawerItem;
+import com.thisatmind.appingpot.pojo.NavDrawerItem;
 
 import java.util.Collections;
 import java.util.List;

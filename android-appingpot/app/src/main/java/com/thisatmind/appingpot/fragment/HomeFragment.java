@@ -42,7 +42,7 @@ public class HomeFragment extends Fragment {
 
         viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
-        viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(1);
         tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 

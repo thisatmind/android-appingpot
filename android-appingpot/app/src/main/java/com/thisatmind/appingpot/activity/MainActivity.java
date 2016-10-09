@@ -1,9 +1,11 @@
 package com.thisatmind.appingpot.activity;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -25,8 +27,12 @@ import com.thisatmind.appingpot.fragment.MessagesFragment;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 public class MainActivity extends AppCompatActivity  implements FragmentDrawer.FragmentDrawerListener{
 
+    private Realm realm;
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
 
@@ -34,32 +40,12 @@ public class MainActivity extends AppCompatActivity  implements FragmentDrawer.F
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initRealm();
+        realm = Realm.getDefaultInstance();
         initViews();
+        getGrant();
     }
 
-    private String getSignature(){
-        // signature
-        PackageInfo info;
-        try {
-            info = getPackageManager().getPackageInfo("com.thisatmind.appingpot", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md;
-                md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                String something = new String(Base64.encode(md.digest(), 0));
-                //String something = new String(Base64.encodeBytes(md.digest()));
-                Log.e("HashKey", something);
-                return something;
-            }
-        } catch (PackageManager.NameNotFoundException e1) {
-            Log.e("name not found", e1.toString());
-        } catch (NoSuchAlgorithmException e) {
-            Log.e("no such an algorithm", e.toString());
-        } catch (Exception e) {
-            Log.e("exception", e.toString());
-        }
-        return null;
-    }
     @Override
     public void onDrawerItemSelected(View view, int position) {
         displayView(position);
@@ -133,6 +119,43 @@ public class MainActivity extends AppCompatActivity  implements FragmentDrawer.F
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // get application signature hashkey
+    private String getSignature(){
+        // signature
+        PackageInfo info;
+        try {
+            info = getPackageManager().getPackageInfo("com.thisatmind.appingpot", PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String something = new String(Base64.encode(md.digest(), 0));
+                //String something = new String(Base64.encodeBytes(md.digest()));
+                Log.e("HashKey", something);
+                return something;
+            }
+        } catch (PackageManager.NameNotFoundException e1) {
+            Log.e("name not found", e1.toString());
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("no such an algorithm", e.toString());
+        } catch (Exception e) {
+            Log.e("exception", e.toString());
+        }
+        return null;
+    }
+    private void getGrant(){
+        Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+        startActivity(intent);
+    }
+
+    private void initRealm(){
+        RealmConfiguration config =
+                new RealmConfiguration.Builder(this)
+                        .deleteRealmIfMigrationNeeded()
+                        .build();
+        Realm.setDefaultConfiguration(config);
     }
 
 }

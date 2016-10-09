@@ -1,7 +1,9 @@
 package com.thisatmind.appingpot.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -28,6 +30,10 @@ import com.thisatmind.appingpot.R;
 
 
 public class LoginActivity extends AppCompatActivity {
+
+    ProgressDialog progressBar;
+    private int progressBarStatus = 0;
+    private Handler progressBarHandler = new Handler();
 
     private LoginButton facebookLoginBtn;
     private CallbackManager callbackManager;
@@ -68,6 +74,17 @@ public class LoginActivity extends AppCompatActivity {
         facebookLoginBtn.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+
+                progressBar = new ProgressDialog(LoginActivity.this);
+                progressBar.setMessage("Facebook login");
+                progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressBar.setProgress(50);
+                progressBar.setMax(100);
+                progressBar.show();
+
+                //reset progress bar status
+                progressBarStatus = 50;
+
                 Log.d("LoginActivity", "facebook login success");
                 Log.d("facebook token", loginResult.getAccessToken().getToken());
                 handleFacebookAccessToken(loginResult.getAccessToken());
@@ -100,7 +117,10 @@ public class LoginActivity extends AppCompatActivity {
                                 // signed in user can be handled in the listener.
                                 if (!task.isSuccessful()) {
                                     Log.w(TAG, "signInAnonymously", task.getException());
+                                    return;
                                 }
+                                startActivity(new Intent(getApplication(), TutorialActivity.class));
+                                LoginActivity.this.finish();
                             }
                         });
             }
@@ -118,14 +138,28 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
+                        progressBarStatus = 100;
+                        // Update the progress bar
+                        progressBarHandler.post(new Runnable() {
+                            public void run() {
+                                progressBar.setProgress(progressBarStatus);
+                            }
+                        });
+                        // close the progress bar dialog
+                        progressBar.dismiss();
+
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
+                        if (!task.isSuccessful()){
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                            return;
                         }
+
+                        startActivity(new Intent(getApplication(), TutorialActivity.class));
+                        LoginActivity.this.finish();
 
                         // ...
                     }

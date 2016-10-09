@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 
 import com.thisatmind.appingpot.R;
 import com.thisatmind.appingpot.adapter.NavigationDrawerAdapter;
-import com.thisatmind.appingpot.model.NavDrawerItem;
+import com.thisatmind.appingpot.pojo.NavDrawerItem;
 
 import java.util.ArrayList;
 import java.util.List;

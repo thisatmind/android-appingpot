@@ -7,4 +7,11 @@
     <dimen name="tab_padding_bottom">16dp</dimen>
     <dimen name="tab_label">14sp</dimen>
     <dimen name="custom_tab_layout_height">72dp</dimen>
+
+    <!-- tutorial -->
+    <dimen name="tutorial_image_layout_width">120dp</dimen>
+    <dimen name="tutorial_image_layout_height">120dp</dimen>
+    <dimen name="tutorial_narration_text_size">16dp</dimen>
+    <dimen name="tutorial_narration_margin_top">40dp</dimen>
+    <dimen name="tutorial_end_btn_margin_top">80dp</dimen>
 </resources>

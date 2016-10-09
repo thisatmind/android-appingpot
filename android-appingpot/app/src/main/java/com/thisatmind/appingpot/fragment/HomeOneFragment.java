@@ -21,19 +21,15 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.thisatmind.appingpot.R;
 import com.thisatmind.appingpot.activity.LoginActivity;
-import com.thisatmind.appingpot.actracker.Tracker;
 import com.thisatmind.appingpot.adapter.DataAdapter;
+import com.thisatmind.appingpot.tracker.Tracker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Patrick on 2016-08-04.
  */
 public class HomeOneFragment extends Fragment {
-
-
-    private ArrayList<String> countries;
 
     public HomeOneFragment() {
         // Required empty public constructor
@@ -43,6 +39,12 @@ public class HomeOneFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.d("here","1");
         super.onCreate(savedInstanceState);
+    }
+
+    private void logout(){
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(getContext(),LoginActivity.class));
+        getActivity().finish();
     }
 
     @Override
@@ -58,11 +60,10 @@ public class HomeOneFragment extends Fragment {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getContext(),LoginActivity.class));
-                getActivity().finish();
+                logout();
             }
         });
+
         // RecyclerView
         final Activity activity = ((AppCompatActivity)getActivity());
 

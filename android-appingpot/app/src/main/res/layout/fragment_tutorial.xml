@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context="com.thisatmind.appingpot.fragment.TutorialFragment">
+
+    <ImageView
+        android:id="@+id/tutorial_image"
+        android:layout_width="@dimen/tutorial_image_layout_width"
+        android:layout_height="@dimen/tutorial_image_layout_height"
+        android:layout_centerInParent="true"/>
+    <TextView
+        android:id="@+id/tutorial_narration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tutorial_image"
+        android:textAlignment="center"
+        android:layout_marginTop="@dimen/tutorial_narration_margin_top"
+        android:textSize="@dimen/tutorial_narration_text_size"
+        android:textColor="@color/textColorPrimary"
+        android:text="@string/hello_blank_fragment" />
+    <Button
+        android:id="@+id/tutorial_end_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tutorial_narration"
+        android:layout_marginTop="@dimen/tutorial_end_btn_margin_top"
+        android:text="시작하기">
+    </Button>
+</RelativeLayout>

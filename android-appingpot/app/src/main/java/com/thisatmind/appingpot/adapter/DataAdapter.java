@@ -39,7 +39,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(DataAdapter.ViewHolder viewHolder, int i) {
-
         viewHolder.appName.setText(pm.getApplicationLabel(apps.get(i)).toString());
         viewHolder.appPackageName.setText(apps.get(i).packageName);
         viewHolder.appImg.setImageDrawable(pm.getApplicationIcon(apps.get(i)));
