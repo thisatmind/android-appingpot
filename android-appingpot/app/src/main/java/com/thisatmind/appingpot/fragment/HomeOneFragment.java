@@ -31,14 +31,12 @@ import java.util.List;
  */
 public class HomeOneFragment extends Fragment {
 
-    private String 
     public HomeOneFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d("here","1");
         super.onCreate(savedInstanceState);
     }
 
