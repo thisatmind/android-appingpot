@@ -40,14 +40,6 @@
                 android:textSize="30dp"
                 android:text="@{String.valueOf(appCount.count)}"
                 android:textStyle="bold"/>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:layout_marginTop="15dp"
-                android:textSize="10dp"
-                android:onClick="@{() -> fragment.saveEventData()}"
-                android:text="sync event data"/>
         </LinearLayout>
     </RelativeLayout>
 </layout>

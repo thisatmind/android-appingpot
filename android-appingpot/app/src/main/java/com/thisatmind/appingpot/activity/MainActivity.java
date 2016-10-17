@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity  implements FragmentDrawer.F
         initRealm();
         realm = Realm.getDefaultInstance();
         initViews();
-        getGrant();
+//        getGrant();
     }
 
     @Override

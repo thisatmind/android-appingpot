@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.thisatmind.appingpot.R;
@@ -31,6 +31,7 @@ import java.util.List;
  */
 public class HomeOneFragment extends Fragment {
 
+    private String 
     public HomeOneFragment() {
         // Required empty public constructor
     }
@@ -93,7 +94,9 @@ public class HomeOneFragment extends Fragment {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if(child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
-                    Toast.makeText(activity.getApplicationContext(), activity.getPackageManager().getApplicationLabel(appList.get(position)).toString(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("market://details?id=com.kakao.talk"));
+                    startActivity(intent);
                 }
 
                 return false;

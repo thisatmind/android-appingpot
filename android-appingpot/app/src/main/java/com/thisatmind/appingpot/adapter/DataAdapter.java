@@ -32,7 +32,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     @Override
-    public DataAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public DataAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_row, viewGroup, false);
         return new ViewHolder(view);
     }
@@ -40,7 +40,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(DataAdapter.ViewHolder viewHolder, int i) {
         viewHolder.appName.setText(pm.getApplicationLabel(apps.get(i)).toString());
-        viewHolder.appPackageName.setText(apps.get(i).packageName);
+//        viewHolder.appPackageName.setText(apps.get(i).packageName);
         viewHolder.appImg.setImageDrawable(pm.getApplicationIcon(apps.get(i)));
     }
 
@@ -51,14 +51,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView appName;
-        private TextView appPackageName;
+//        private TextView appPackageName;
         private ImageView appImg;
 
         public ViewHolder(View view) {
             super(view);
             appImg = (ImageView)view.findViewById(R.id.appImg);
             appName = (TextView)view.findViewById(R.id.appName);
-            appPackageName = (TextView)view.findViewById(R.id.appPackageName);
+//            appPackageName = (TextView)view.findViewById(R.id.appPackageName);
         }
     }
 

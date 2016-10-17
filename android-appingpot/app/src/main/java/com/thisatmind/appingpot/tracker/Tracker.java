@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -34,11 +35,16 @@ public class Tracker {
         List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
 
         for (ApplicationInfo packageInfo : packages) {
-            Log.d(TAG, "App name : " + pm.getApplicationLabel(packageInfo).toString());
-            Log.d(TAG, "Installed package :" + packageInfo.packageName);
-            Log.d(TAG, "Source dir : " + packageInfo.sourceDir);
-            Log.d(TAG, "ClassName : " + packageInfo.className );
-            Log.d(TAG, "Launch Activity :" + pm.getLaunchIntentForPackage(packageInfo.packageName));
+            if(packageInfo.packageName.equals("com.kakao.talk")){
+                List<ApplicationInfo> temp = new ArrayList<ApplicationInfo>();
+                temp.add(packageInfo);
+                return temp;
+            }
+//            Log.d(TAG, "App name : " + pm.getApplicationLabel(packageInfo).toString());
+//            Log.d(TAG, "Installed package :" + packageInfo.packageName);
+//            Log.d(TAG, "Source dir : " + packageInfo.sourceDir);
+//            Log.d(TAG, "ClassName : " + packageInfo.className );
+//            Log.d(TAG, "Launch Activity :" + pm.getLaunchIntentForPackage(packageInfo.packageName));
         }
 
         return packages;

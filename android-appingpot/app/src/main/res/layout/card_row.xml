@@ -13,26 +13,54 @@
         android:orientation="vertical"
         android:padding="15dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:text="오늘의 추천 앱"/>
 
         <ImageView
             android:id="@+id/appImg"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:scaleType="fitXY">
-
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center_horizontal">
         </ImageView>
         <TextView
             android:id="@+id/appName"
-            android:textSize="12sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold" />
+            android:layout_marginTop="40dp"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:textAlignment="center"/>
 
         <TextView
-            android:id="@+id/appPackageName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd"
+            android:layout_marginTop="40dp"
+            android:text="이 앱을 사용중인 친구들"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/fb_user_1"/>
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/fb_user_2"/>
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
