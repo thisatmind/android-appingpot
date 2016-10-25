@@ -31,7 +31,8 @@ import java.util.List;
  */
 public class HomeOneFragment extends Fragment {
 
-    private String 
+
+
     public HomeOneFragment() {
         // Required empty public constructor
     }

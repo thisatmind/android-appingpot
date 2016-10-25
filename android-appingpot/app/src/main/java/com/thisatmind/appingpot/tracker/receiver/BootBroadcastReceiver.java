@@ -13,7 +13,7 @@ import com.thisatmind.appingpot.tracker.service.OnBootService;
 /**
  * Created by patrick on 2016-09-21.
  */
-public class BootBroadcastRecevier extends BroadcastReceiver {
+public class BootBroadcastReceiver extends BroadcastReceiver {
     static final String ACTION = "android.intent.action.BOOT_COMPLETED";
 
     @Override
