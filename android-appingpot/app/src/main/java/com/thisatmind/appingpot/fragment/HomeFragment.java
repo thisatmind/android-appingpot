@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new HomeOneFragment(), "Today");
         adapter.addFragment(new HomeTwoFragment(), "App");
-//        adapter.addFragment(new HomeThreeFragment(), "THREE");
+        adapter.addFragment(new HomeThreeFragment(), "THREE");
         viewPager.setAdapter(adapter);
     }
 

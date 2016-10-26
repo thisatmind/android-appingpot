@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestClient {
 
-    private static final String URL = "https://appingpotnodeserver-patrick-shim.c9users.io/";
+    private static final String URL = "https://appingpot.herokuapp.com/";
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 

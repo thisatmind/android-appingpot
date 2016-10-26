@@ -27,6 +27,14 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.thisatmind.appingpot.R;
+import com.thisatmind.appingpot.rest.RestClient;
+import com.thisatmind.appingpot.rest.model.ResultInfo;
+import com.thisatmind.appingpot.rest.model.UserInfo;
+import com.thisatmind.appingpot.rest.service.UserService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -77,7 +85,6 @@ public class LoginActivity extends AppCompatActivity {
         facebookLoginBtn.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
                 progressBar = new ProgressDialog(LoginActivity.this);
                 progressBar.setMessage("Facebook login");
                 progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -86,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                 progressBar.show();
 
                 //reset progress bar status
-                progressBarStatus = 50;
+                progressBarStatus = 30;
 
                 Log.d("LoginActivity", "facebook login success");
                 Log.d("facebook token", loginResult.getAccessToken().getToken());
@@ -133,38 +140,48 @@ public class LoginActivity extends AppCompatActivity {
     private void handleFacebookAccessToken(AccessToken token) {
         final String TAG = "hdfbAccessToken";
         Log.d(TAG, "handleFacebookAccessToken:" + token);
+        Log.d(TAG, "facebookToken: " + token.getToken());
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(@NonNull final Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
-                        progressBarStatus = 100;
-                        // Update the progress bar
-                        progressBarHandler.post(new Runnable() {
-                            public void run() {
-                                progressBar.setProgress(progressBarStatus);
+                        progressBarStatus = 70;
+
+                        UserService userService = RestClient.createService(UserService.class);
+                        Call<ResultInfo> call = userService.addUser(new UserInfo(mAuth.getCurrentUser().getUid(), FACEBOOK_USER_TYPE, "facebookuserName"));
+                        call.enqueue(new Callback<ResultInfo>(){
+                            @Override
+                            public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {
+                                progressBarStatus = 100;
+                                // Update the progress bar
+                                progressBarHandler.post(new Runnable() {
+                                    public void run() {
+                                        progressBar.setProgress(progressBarStatus);
+                                    }
+                                });
+                                Log.d(TAG, "signin success : " + response.body().getMessage());
+                                startActivity(new Intent(getApplication(), TutorialActivity.class));
+                                LoginActivity.this.finish();
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResultInfo> call, Throwable t) {
+                                // If sign in fails, display a message to the user. If sign in succeeds
+                                // the auth state listener will be notified and logic to handle the
+                                // signed in user can be handled in the listener.
+                                if (!task.isSuccessful()){
+                                    Log.w(TAG, "signInWithCredential", task.getException());
+                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                    LoginManager.getInstance().logOut();
+                                    return;
+                                }
                             }
                         });
-                        // close the progress bar dialog
-                        progressBar.dismiss();
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()){
-                            Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        startActivity(new Intent(getApplication(), TutorialActivity.class));
-                        LoginActivity.this.finish();
-
-                        // ...
                     }
                 });
     }
@@ -186,4 +203,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        progressBar.dismiss();
+    }
 }
