@@ -51,9 +51,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
         View v;
         switch(viewType){
             case USAGE:
-                v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.home_usage_card, parent, false);
-                return new UsageViewHolder(v);
+//                v = LayoutInflater.from(parent.getContext())
+//                        .inflate(R.layout.home_usage_card, parent, false);
+//                return new UsageViewHolder(v);
             case RECO:
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.home_reco_card, parent, false);

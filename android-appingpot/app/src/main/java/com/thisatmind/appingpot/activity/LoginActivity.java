@@ -40,6 +40,9 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    private static final String ANONYMOUS_USER_TYPE = "anonymous";
+    private static final String FACEBOOK_USER_TYPE = "facebook";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

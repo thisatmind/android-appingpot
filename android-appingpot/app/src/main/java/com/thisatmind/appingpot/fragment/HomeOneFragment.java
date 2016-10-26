@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.thisatmind.appingpot.R;
 import com.thisatmind.appingpot.activity.LoginActivity;
 import com.thisatmind.appingpot.adapter.DataAdapter;
 import com.thisatmind.appingpot.tracker.Tracker;
