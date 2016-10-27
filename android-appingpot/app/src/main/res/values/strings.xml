@@ -10,8 +10,7 @@
     <string name="nav_item_logout">logout</string>
 
     <!-- tutorial explanations -->
-    <string-array
-        name="tutorial_narrations">
+    <string-array name="tutorial_narrations">
         <item>당신의 앱 사용패턴을 분석합니다.</item>
         <item>분석한 결과를 정리해서 보여주고</item>
         <item>당신에게 꼭 맞는 앱을 추천합니다.</item>

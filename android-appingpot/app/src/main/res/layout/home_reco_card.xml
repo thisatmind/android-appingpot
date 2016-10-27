@@ -11,24 +11,34 @@
     card_view:cardCornerRadius="5dp">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:padding="15dp"
+        android:id="@+id/recoCardLine"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:textSize="20dp"
             android:textStyle="bold"
             android:textAlignment="center"
             android:text="오늘의 추천 앱"/>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <ImageView
             android:id="@+id/appImg"
             android:layout_width="46dp"
             android:layout_height="46dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="100dp"
             android:layout_gravity="center_horizontal">
         </ImageView>
         <TextView
@@ -61,6 +71,16 @@
                 android:layout_height="32dp"
                 android:layout_marginRight="10dp"
                 android:src="@drawable/fb_user_2"/>
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/fb_user_3"/>
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/fb_user_4"/>
         </LinearLayout>
 
         <LinearLayout

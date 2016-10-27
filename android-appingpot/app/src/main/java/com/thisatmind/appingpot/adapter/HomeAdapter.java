@@ -1,9 +1,12 @@
 package com.thisatmind.appingpot.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,11 +91,12 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void initRecoCardViewHolder(final HomeFragment.RecoCardViewHolder vh, int position) {
-        RecoCard recoCard = (RecoCard) items.get(position);
+        final RecoCard recoCard = (RecoCard) items.get(position);
         if(recoCard != null){
             Glide.with(context)
-                .load("https://lh6.ggpht.com/71QkuTssZGm4B9_Vf0RINVZRJaOdNzU9OYzR6jZH2b6u-V7E1Lrw1K3nl56PVRHueVQ=w300-rw")
-                .asBitmap().into(new BitmapImageViewTarget(vh.getAppImg()){
+                .load(recoCard.getAppImg())
+                .asBitmap()
+                .into(new BitmapImageViewTarget(vh.getAppImg()){
                     @Override
                     public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
                         super.onResourceReady(bitmap, anim);
@@ -100,13 +104,26 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             @Override
                             public void onGenerated(Palette palette) {
 
-                                Palette.Swatch vibrantSwatch = palette.getLightVibrantSwatch();
-                                vh.getCard().setBackgroundColor(vibrantSwatch.getBodyTextColor());
+                                Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
+                                if(vibrantSwatch != null){
+                                    Log.d("this", "this is here");
+                                    vh.getCardLine().setBackgroundColor(vibrantSwatch.getTitleTextColor());
+                                    return;
+                                }
+                                Log.d("this", "this is not here");
                             }
                         });
                     }
                 });
             vh.getAppName().setText(recoCard.getAppName());
+            vh.getInstallBtn().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("market://details?id=" + recoCard.getInstallLink()));
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 

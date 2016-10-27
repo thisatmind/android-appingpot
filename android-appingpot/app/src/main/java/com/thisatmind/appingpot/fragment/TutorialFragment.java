@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thisatmind.appingpot.R;
+import com.thisatmind.appingpot.activity.InterestActivity;
 import com.thisatmind.appingpot.activity.MainActivity;
 
 
@@ -71,7 +72,7 @@ public class TutorialFragment extends Fragment {
                 editor.putBoolean("haveToTutorial", false);
                 editor.apply();
 
-                startActivity(new Intent( getContext(), MainActivity.class));
+                startActivity(new Intent( getContext(), InterestActivity.class));
                 getActivity().finish();
             }
         });

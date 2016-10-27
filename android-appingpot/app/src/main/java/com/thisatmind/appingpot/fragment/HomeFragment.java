@@ -2,13 +2,14 @@ package com.thisatmind.appingpot.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.thisatmind.appingpot.R;
@@ -48,8 +49,13 @@ public class HomeFragment extends Fragment {
 
     private List<Object> getItems(){
         ArrayList<Object> list = new ArrayList<>();
-        list.add(new RecoCard("appName1", "appImg1"));
-        list.add(new TodayCard("todayAppName", "100"));
+        list.add(new RecoCard("토스", "https://lh3.googleusercontent.com/R2IN1j3Um3mttEwE4wCBgwlntTOoDCevffLdK-IsYA0kn8KA21OoKx4KAGNVB-jw7Mk=w300-rw", "viva.republica.toss"));
+        list.add(new RecoCard("자소설닷컴", "https://lh3.googleusercontent.com/6wjXIkv0r7ETwf2ewj3kupCjneQbiuSftzTte5ZXrjErMztjmeH4lrGwJqLa43VUkDU=w300-rw", "com.anchoreer.jasoseol"));
+        list.add(new RecoCard("it알려줌", "https://lh3.googleusercontent.com/bQExpSSf4T7_XW23qTOOump2iEQJ_pWqebgUYwWsdRk-gcIM6nVLGLTF6WWk4hwW7KE=w300-rw", "com.allyeozum.android.allyeozumit"));
+        list.add(new RecoCard("YBM TOEIC Speaking Test", "https://lh3.googleusercontent.com/jFNT6jHS9yKxKhNOrpWL9FbRuMsDIxcrTaJZ3s6tXnZjK1GYQkaMZmt7SNolMQWboA=w300-rw", "com.ybmsisa.TosEx"));
+        list.add(new RecoCard("잡코리아", "https://lh4.ggpht.com/BGoj8lgJy-VLSzkSyidpvpqrtICgQjFuOAe6GSdD_tlnZJobUeTw_-49OihHPzFnrvM=w300-rw", "com.jobkorea.app"));
+        list.add(new RecoCard("Airbnb", "https://lh3.googleusercontent.com/BQnvuZR500pg2ulvv3FBmRI93ODz3AjNfbz92hCieuJLvmbGY36AKhETMTTfTDgpPQI=w300-rw", "com.airbnb.android"));
+        list.add(new TodayCard("카카오톡", "100"));
         return list;
     }
 
@@ -57,13 +63,15 @@ public class HomeFragment extends Fragment {
 
         private TextView appName;
         private ImageView appImg;
-        private CardView card;
+        private LinearLayout recoCardLine;
+        private Button installBtn;
 
         public RecoCardViewHolder(View v) {
             super(v);
             appName = (TextView) v.findViewById(R.id.appName);
             appImg = (ImageView) v.findViewById(R.id.appImg);
-            card = (CardView) v.findViewById(R.id.recoCard);
+            recoCardLine = (LinearLayout) v.findViewById(R.id.recoCardLine);
+            installBtn = (Button) v.findViewById(R.id.recoAppInstallBtn);
         }
 
         public TextView getAppName() {
@@ -82,9 +90,14 @@ public class HomeFragment extends Fragment {
             this.appImg = appImg;
         }
 
-        public CardView getCard() { return this.card; }
+        public LinearLayout getCardLine() { return this.recoCardLine; }
 
-        public void setCard(CardView card) { this.card = card; }
+        public void setCardLine(LinearLayout recoCardLine) { this.recoCardLine = recoCardLine; }
+
+        public Button getInstallBtn() { return this.installBtn;}
+
+        public void setInstallBtn(Button installBtn) { this.installBtn = installBtn;}
+
     }
 
     public static class TodayCardViewHolder extends RecyclerView.ViewHolder {

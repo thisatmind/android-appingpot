@@ -8,12 +8,14 @@ public class RecoCard {
 
     private String appName;
     private String appImg;
+    private String installLink;
 
     public RecoCard() {}
 
-    public RecoCard(String appName, String appImg) {
+    public RecoCard(String appName, String appImg, String installLink) {
         this.appName = appName;
         this.appImg = appImg;
+        this.installLink = installLink;
     }
 
     public String getAppName() {
@@ -31,4 +33,8 @@ public class RecoCard {
     public void setAppImg(String appImg) {
         this.appImg = appImg;
     }
+
+    public String getInstallLink(){return this.installLink;}
+
+    public void setInstallLink(String installLink){this.installLink = installLink;}
 }
