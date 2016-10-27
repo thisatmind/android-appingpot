@@ -121,16 +121,23 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
-
-                                // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
                                 if (!task.isSuccessful()) {
                                     Log.w(TAG, "signInAnonymously", task.getException());
                                     return;
                                 }
-                                startActivity(new Intent(getApplication(), TutorialActivity.class));
-                                LoginActivity.this.finish();
+                                UserService userService = RestClient.createService(UserService.class);
+                                Call<ResultInfo> call = userService.addUser(new UserInfo(mAuth.getCurrentUser().getUid(), ANONYMOUS_USER_TYPE, "anonymoususerName"));
+                                call.enqueue(new Callback<ResultInfo>(){
+                                    @Override
+                                    public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {
+                                        startActivity(new Intent(getApplication(), TutorialActivity.class));
+                                        LoginActivity.this.finish();
+                                    }
+                                    @Override
+                                    public void onFailure(Call<ResultInfo> call, Throwable t) {
+                                        // @TODO signout user from firebase
+                                    }
+                                 });
                             }
                         });
             }
@@ -170,13 +177,11 @@ public class LoginActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<ResultInfo> call, Throwable t) {
-                                // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
                                 if (!task.isSuccessful()){
                                     Log.w(TAG, "signInWithCredential", task.getException());
                                     Toast.makeText(LoginActivity.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
+                                    // @TODO if signin fail, you should signout facebook auth and firebase
                                     LoginManager.getInstance().logOut();
                                     return;
                                 }
@@ -206,6 +211,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        progressBar.dismiss();
+        if(progressBar != null) {
+            progressBar.dismiss();
+        }
     }
 }

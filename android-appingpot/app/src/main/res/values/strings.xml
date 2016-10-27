@@ -7,7 +7,7 @@
 
     <string name="nav_item_home">Home</string>
     <string name="nav_item_friends">Friends</string>
-    <string name="nav_item_notifications">Messages</string>
+    <string name="nav_item_logout">logout</string>
 
     <!-- tutorial explanations -->
     <string-array
@@ -32,10 +32,10 @@
     <string-array name="nav_drawer_labels">
         <item>@string/nav_item_home</item>
         <item>@string/nav_item_friends</item>
-        <item>@string/nav_item_notifications</item>
+        <item>@string/nav_item_logout</item>
     </string-array>
 
-    <string name="title_messages">Messages</string>
+    <string name="title_logout">Logout</string>
     <string name="title_friends">Friends</string>
     <string name="title_home">Appingpot</string>
 

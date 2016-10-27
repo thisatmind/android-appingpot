@@ -20,9 +20,8 @@ import android.view.View;
 
 import com.thisatmind.appingpot.R;
 import com.thisatmind.appingpot.fragment.FragmentDrawer;
-import com.thisatmind.appingpot.fragment.FriendsFragment;
+import com.thisatmind.appingpot.fragment.LogoutFragment;
 import com.thisatmind.appingpot.fragment.HomeFragment;
-import com.thisatmind.appingpot.fragment.MessagesFragment;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -60,12 +59,12 @@ public class MainActivity extends AppCompatActivity  implements FragmentDrawer.F
                 title = getString(R.string.title_home);
                 break;
             case 1:
-                fragment = new FriendsFragment();
+                fragment = new LogoutFragment();
                 title = getString(R.string.title_friends);
                 break;
             case 2:
-                fragment = new MessagesFragment();
-                title = getString(R.string.title_messages);
+                fragment = new LogoutFragment();
+                title = "Logout";
                 break;
             default:
                 break;
