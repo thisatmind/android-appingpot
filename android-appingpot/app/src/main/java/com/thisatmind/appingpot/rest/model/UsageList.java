@@ -1,7 +1,5 @@
 package com.thisatmind.appingpot.rest.model;
 
-import com.thisatmind.appingpot.models.Usage;
-
 import java.util.List;
 
 /**
@@ -9,21 +7,12 @@ import java.util.List;
  */
 public class UsageList {
 
-    String userName;
     List<Usage> list;
 
     public UsageList(){}
-    public UsageList(String userName, List<Usage> list) {
-        this.userName = userName;
+
+    public UsageList(List<Usage> list) {
         this.list = list;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public List<Usage> getList() {

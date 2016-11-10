@@ -13,7 +13,7 @@ import retrofit2.http.POST;
 
 public interface UserService {
 
-    @POST("user/signin")
+    @POST("user/signup")
     Call<ResultInfo> addUser(@Body UserInfo userInfo);
 
 }

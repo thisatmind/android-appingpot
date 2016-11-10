@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                                     return;
                                 }
                                 UserService userService = RestClient.createService(UserService.class);
-                                Call<ResultInfo> call = userService.addUser(new UserInfo(mAuth.getCurrentUser().getUid(), ANONYMOUS_USER_TYPE, "anonymoususerName"));
+                                Call<ResultInfo> call = userService.addUser(new UserInfo(ANONYMOUS_USER_TYPE, mAuth.getCurrentUser().getUid()));
                                 call.enqueue(new Callback<ResultInfo>(){
                                     @Override
                                     public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {
@@ -159,7 +159,7 @@ public class LoginActivity extends AppCompatActivity {
                         progressBarStatus = 70;
 
                         UserService userService = RestClient.createService(UserService.class);
-                        Call<ResultInfo> call = userService.addUser(new UserInfo(mAuth.getCurrentUser().getUid(), FACEBOOK_USER_TYPE, "facebookuserName"));
+                        Call<ResultInfo> call = userService.addUser(new UserInfo(FACEBOOK_USER_TYPE, mAuth.getCurrentUser().getUid()));
                         call.enqueue(new Callback<ResultInfo>(){
                             @Override
                             public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {

@@ -23,6 +23,7 @@ import com.thisatmind.appingpot.fragment.FragmentDrawer;
 import com.thisatmind.appingpot.fragment.HomeFragment;
 import com.thisatmind.appingpot.fragment.LogoutFragment;
 import com.thisatmind.appingpot.fragment.MessagesFragment;
+import com.thisatmind.appingpot.tracker.TrackerDAO;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity  implements FragmentDrawer.F
         realm = Realm.getDefaultInstance();
         initViews();
 //        getGrant();
+        new TrackerDAO().getUsageList();
     }
 
     @Override

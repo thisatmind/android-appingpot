@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.thisatmind.appingpot.models.Event;
 import com.thisatmind.appingpot.models.Usage;
+import com.thisatmind.appingpot.rest.model.UsageList;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -138,5 +139,18 @@ public class TrackerDAO {
         if(result.size() == 0) return null;
         result = result.sort("count", Sort.DESCENDING);
         return result.get(0);
+    }
+
+    public UsageList getUsageList() {
+        Log.d("getUsageList", "it's here");
+        RealmQuery<Usage> query = Realm.getDefaultInstance()
+                .where(Usage.class);
+
+        RealmResults<Usage> result = query.findAll();
+        for(int i = 0; i < result.size(); i++){
+            Log.d("getUsageList", result.get(i).toString());
+        }
+
+        return null;
     }
 }

@@ -6,20 +6,14 @@ package com.thisatmind.appingpot.rest.model;
 
 public class UserInfo {
 
-    String id;
     String userType;
-    String name;
+    String firebaseToken;
 
     public UserInfo(){}
 
-    public UserInfo(String id, String userType, String name) {
-        this.id = id;
+    public UserInfo(String userType, String firebaseToken) {
         this.userType = userType;
-        this.name = name;
-    }
-
-    public String getId() {
-        return id;
+        this.firebaseToken = firebaseToken;
     }
 
     public String getUserType() {
@@ -30,15 +24,11 @@ public class UserInfo {
         this.userType = userType;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getFirebaseToken() {
+        return firebaseToken;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
     }
 }

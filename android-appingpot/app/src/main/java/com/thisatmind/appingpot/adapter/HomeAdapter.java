@@ -17,6 +17,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.thisatmind.appingpot.R;
 import com.thisatmind.appingpot.fragment.HomeFragment;
 import com.thisatmind.appingpot.fragment.pojo.RecoCard;
+import com.thisatmind.appingpot.fragment.pojo.RemoveCard;
 import com.thisatmind.appingpot.fragment.pojo.TodayCard;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Object> items;
 
-    private final int RECO = 0, TODAY = 1;
+    private final int RECO = 0, TODAY = 1, REMOVE = 2;
 
     private Context context;
 
@@ -44,10 +45,14 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (items.get(position) instanceof RecoCard) {
+
+        Object curItem = items.get(position);
+        if (curItem instanceof RecoCard) {
             return RECO;
-        } else if (items.get(position) instanceof TodayCard) {
+        } else if (curItem instanceof TodayCard) {
             return TODAY;
+        } else if (curItem instanceof RemoveCard) {
+            return REMOVE;
         }
         return -1;
     }
@@ -67,6 +72,9 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 View todayCard = inflater.inflate(R.layout.home_today_card, viewGroup, false);
                 viewHolder = new HomeFragment.TodayCardViewHolder(todayCard);
                 break;
+            case REMOVE:
+                View removeCard = inflater.inflate(R.layout.home_remove_card, viewGroup, false);
+                viewHolder = new HomeFragment.RemoveCardViewHolder(removeCard);
             default:
                 viewHolder = null;
                 break;
@@ -85,6 +93,9 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 HomeFragment.TodayCardViewHolder todayViewHolder = (HomeFragment.TodayCardViewHolder) viewHolder;
                 initTodayCardViewHolder(todayViewHolder, position);
                 break;
+            case REMOVE:
+                HomeFragment.RemoveCardViewHolder removeViewHolder = (HomeFragment.RemoveCardViewHolder) viewHolder;
+//                initRemoveCardViewHolder(removeViewHolder, position);
             default:
                 break;
         }
@@ -126,6 +137,43 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             });
         }
     }
+
+//    private void initRemoveCardViewHolder(final HomeFragment.RemoveCardViewHolder vh, int position) {
+//        final RemoveCard removeCard = (RemoveCard) items.get(position);
+//        if(removeCard != null){
+//            Glide.with(context)
+//                    .load(removeCard.getAppImg())
+//                    .asBitmap()
+//                    .into(new BitmapImageViewTarget(vh.getAppImg()){
+//                        @Override
+//                        public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+//                            super.onResourceReady(bitmap, anim);
+//                            Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
+//                                @Override
+//                                public void onGenerated(Palette palette) {
+//
+//                                    Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
+//                                    if(vibrantSwatch != null){
+//                                        Log.d("this", "this is here");
+//                                        vh.getCardLine().setBackgroundColor(vibrantSwatch.getTitleTextColor());
+//                                        return;
+//                                    }
+//                                    Log.d("this", "this is not here");
+//                                }
+//                            });
+//                        }
+//                    });
+//            vh.getAppName().setText(removeCard.getAppName());
+//            vh.getUnInsallBtn().setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Intent intent = new Intent(Intent.ACTION_VIEW);
+//                    intent.setData(Uri.parse("market://details?id=" + removeCard));
+//                    context.startActivity(intent);
+//                }
+//            });
+//        }
+//    }
 
     private void initTodayCardViewHolder(HomeFragment.TodayCardViewHolder vh1, int position) {
         TodayCard todayCard = (TodayCard) items.get(position);

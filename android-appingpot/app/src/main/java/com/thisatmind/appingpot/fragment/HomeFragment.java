@@ -1,9 +1,11 @@
 package com.thisatmind.appingpot.fragment;
 
+import android.app.usage.UsageEvents;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,10 @@ import com.thisatmind.appingpot.R;
 import com.thisatmind.appingpot.adapter.HomeAdapter;
 import com.thisatmind.appingpot.fragment.pojo.RecoCard;
 import com.thisatmind.appingpot.fragment.pojo.TodayCard;
+import com.thisatmind.appingpot.models.Event;
+import com.thisatmind.appingpot.pojo.AppCount;
+import com.thisatmind.appingpot.tracker.Tracker;
+import com.thisatmind.appingpot.tracker.TrackerDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +65,23 @@ public class HomeFragment extends Fragment {
         return list;
     }
 
+    public void saveEventData(){
+        UsageEvents uEvents = Tracker.getUsageEvents(getContext());
+        UsageEvents uEventsTimer = Tracker.getUsageEvents(getContext());
+
+        TrackerDAO.saveEventPerHour(Tracker.calcEventPerHour(uEvents,
+                Tracker.getEventStartPoint(getContext())));
+        long timer = Tracker.calcEventStartPoint(uEventsTimer);
+        Tracker.setEventStartPoint(getContext(), timer);
+        Log.d("saveEventData", "saved event data");
+    }
+
+    public AppCount getAppCount(){
+        Event maxEvent = TrackerDAO.getMaxEvent();
+        if(maxEvent != null) return new AppCount(maxEvent.getPackageName(), maxEvent.getCount());
+        Log.d("MaxEvent", "It is null");
+        return null;
+    }
     public static class RecoCardViewHolder extends RecyclerView.ViewHolder {
 
         private TextView appName;
@@ -100,6 +123,53 @@ public class HomeFragment extends Fragment {
 
     }
 
+    public static class RemoveCardViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView appName;
+        private ImageView appImg;
+        private TextView lastUsageTime;
+        private Button unInsallBtn;
+
+        public RemoveCardViewHolder(View v) {
+            super(v);
+            appName = (TextView) v.findViewById(R.id.appName);
+            appImg = (ImageView) v.findViewById(R.id.appImg);
+            lastUsageTime = (TextView) v.findViewById(R.id.lastUsedTime);
+            unInsallBtn = (Button) v.findViewById(R.id.uninstall_btn);
+        }
+
+        public TextView getAppName() {
+            return appName;
+        }
+
+        public void setAppName(TextView appName) {
+            this.appName = appName;
+        }
+
+        public ImageView getAppImg() {
+            return appImg;
+        }
+
+        public void setAppImg(ImageView appImg) {
+            this.appImg = appImg;
+        }
+
+        public TextView getLastUsageTime() {
+            return lastUsageTime;
+        }
+
+        public void setLastUsageTime(TextView lastUsageTime) {
+            this.lastUsageTime = lastUsageTime;
+        }
+
+        public Button getUnInsallBtn() {
+            return unInsallBtn;
+        }
+
+        public void setUnInsallBtn(Button unInsallBtn) {
+            this.unInsallBtn = unInsallBtn;
+        }
+    }
     public static class TodayCardViewHolder extends RecyclerView.ViewHolder {
 
         private TextView todayAppName, todayAppCount;
