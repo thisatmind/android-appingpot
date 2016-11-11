@@ -20,11 +20,20 @@ import com.thisatmind.appingpot.fragment.pojo.RecoCard;
 import com.thisatmind.appingpot.fragment.pojo.TodayCard;
 import com.thisatmind.appingpot.models.Event;
 import com.thisatmind.appingpot.pojo.AppCount;
+import com.thisatmind.appingpot.rest.RestClient;
+import com.thisatmind.appingpot.rest.model.ResultInfo;
+import com.thisatmind.appingpot.rest.model.Usage;
+import com.thisatmind.appingpot.rest.model.UsageList;
+import com.thisatmind.appingpot.rest.service.UsageService;
 import com.thisatmind.appingpot.tracker.Tracker;
 import com.thisatmind.appingpot.tracker.TrackerDAO;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Patrick on 2016-08-04.
@@ -50,6 +59,8 @@ public class HomeFragment extends Fragment {
         this.recyclerView = (RecyclerView)rootView.findViewById(R.id.home_recycler_view);
         recyclerView.setAdapter(new HomeAdapter(getItems()));
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
+        saveUsageData();
+        uploadUsageList(TrackerDAO.modelUsageListToRestUsageList(TrackerDAO.getUsageList(0)));
         return rootView;
     }
 
@@ -76,12 +87,45 @@ public class HomeFragment extends Fragment {
         Log.d("saveEventData", "saved event data");
     }
 
+    public void saveUsageData(){
+        UsageEvents uEvents = Tracker.getUsageEvents(getContext());
+        UsageEvents uEventsTimer = Tracker.getUsageEvents(getContext());
+
+        TrackerDAO.saveUsagePerHour(Tracker.calcUsagePerHour(uEvents,
+                Tracker.getUsageStartPoint(getContext())
+        ));
+        long timer = Tracker.calcUsageStartPoint(uEventsTimer);
+        Tracker.setUsageStartPoint(getContext(), timer);
+        Log.d("saveUsageData", "saved usage data");
+    }
+
     public AppCount getAppCount(){
         Event maxEvent = TrackerDAO.getMaxEvent();
         if(maxEvent != null) return new AppCount(maxEvent.getPackageName(), maxEvent.getCount());
         Log.d("MaxEvent", "It is null");
         return null;
     }
+
+    public void uploadUsageList(UsageList list){
+        UsageService service = RestClient.createService(UsageService.class);
+        Call<ResultInfo> call = service.addUsageList(list);
+        try{
+            call.enqueue(new Callback<ResultInfo>() {
+                @Override
+                public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {
+                    Log.d("uploadUsageList", response.raw().toString());
+                    Log.d("uploadUsageList", response.body().getMessage());
+                }
+                @Override
+                public void onFailure(Call<ResultInfo> call, Throwable t) {
+
+                }
+            });
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static class RecoCardViewHolder extends RecyclerView.ViewHolder {
 
         private TextView appName;

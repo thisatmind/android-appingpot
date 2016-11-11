@@ -1,6 +1,6 @@
 package com.thisatmind.appingpot.rest.service;
 
-import com.thisatmind.appingpot.rest.model.EventList;
+import com.thisatmind.appingpot.rest.model.ResultInfo;
 import com.thisatmind.appingpot.rest.model.UsageList;
 
 import retrofit2.Call;
@@ -14,5 +14,5 @@ import retrofit2.http.POST;
 public interface UsageService {
 
     @POST("usage")
-    Call<UsageList> addUsageList(@Body UsageList usageList);
+    Call<ResultInfo> addUsageList(@Body UsageList usageList);
 }

@@ -7,17 +7,17 @@ package com.thisatmind.appingpot.rest.model;
 public class Usage {
 
     String userId;
-    String appId;
-    String dailyUsageTime;
-    String dailyUsageCount;
+    String packageName;
+    long date;
+    long usage;
 
     public Usage() {}
 
-    public Usage(String userId, String appId, String dailyUsageTime, String dailyUsageCount) {
+    public Usage(String userId, String packageName, long date, long usage) {
         this.userId = userId;
-        this.appId = appId;
-        this.dailyUsageTime = dailyUsageTime;
-        this.dailyUsageCount = dailyUsageCount;
+        this.packageName = packageName;
+        this.date = date;
+        this.usage = usage;
     }
 
     public String getUserId() {
@@ -28,27 +28,27 @@ public class Usage {
         this.userId = userId;
     }
 
-    public String getAppId() {
-        return appId;
+    public String getPackageName() {
+        return packageName;
     }
 
-    public void setAppId(String appId) {
-        this.appId = appId;
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
-    public String getDailyUsageTime() {
-        return dailyUsageTime;
+    public long getDate() {
+        return date;
     }
 
-    public void setDailyUsageTime(String dailyUsageTime) {
-        this.dailyUsageTime = dailyUsageTime;
+    public void setDate(long date) {
+        this.date = date;
     }
 
-    public String getDailyUsageCount() {
-        return dailyUsageCount;
+    public long getUsage() {
+        return usage;
     }
 
-    public void setDailyUsageCount(String dailyUsageCount) {
-        this.dailyUsageCount = dailyUsageCount;
+    public void setUsage(long usage) {
+        this.usage = usage;
     }
 }

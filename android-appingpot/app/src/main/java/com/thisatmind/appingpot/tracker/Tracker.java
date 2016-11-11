@@ -122,7 +122,7 @@ public class Tracker {
         return map;
     }
 
-    public HashMap<ForegroundEvent,Long> calcUsagePerHour(UsageEvents uEvents, long startPoint){
+    public static HashMap<ForegroundEvent,Long> calcUsagePerHour(UsageEvents uEvents, long startPoint){
 
         UsageEvents.Event e = new UsageEvents.Event();
 
@@ -162,15 +162,10 @@ public class Tracker {
                     +" / usage : " + dateFormat.format(map.get(key)));
         }
 
-        ForegroundEvent startObject = new ForegroundEvent();
-        startObject.setPackageName("startPoint");
-        startObject.setDate(prevTime);
-        map.put(startObject,prevTime);
-
         return map;
     }
 
-    public long calcUsageStartPoint(UsageEvents uEvents){
+    public static long calcUsageStartPoint(UsageEvents uEvents){
 
         UsageEvents.Event e = new UsageEvents.Event();
 

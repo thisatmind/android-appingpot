@@ -41,11 +41,8 @@ public class MainActivity extends AppCompatActivity  implements FragmentDrawer.F
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initRealm();
         realm = Realm.getDefaultInstance();
         initViews();
-//        getGrant();
-        new TrackerDAO().getUsageList();
     }
 
     @Override
@@ -147,18 +144,7 @@ public class MainActivity extends AppCompatActivity  implements FragmentDrawer.F
         }
         return null;
     }
-    private void getGrant(){
-        Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-        startActivity(intent);
-    }
 
-    private void initRealm(){
-        RealmConfiguration config =
-                new RealmConfiguration.Builder(this)
-                        .deleteRealmIfMigrationNeeded()
-                        .build();
-        Realm.setDefaultConfiguration(config);
-    }
 
 }
 

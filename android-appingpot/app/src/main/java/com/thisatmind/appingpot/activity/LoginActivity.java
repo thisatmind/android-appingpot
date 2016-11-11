@@ -26,12 +26,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.thisatmind.appingpot.R;
 import com.thisatmind.appingpot.rest.RestClient;
 import com.thisatmind.appingpot.rest.model.ResultInfo;
 import com.thisatmind.appingpot.rest.model.UserInfo;
 import com.thisatmind.appingpot.rest.service.UserService;
+import com.thisatmind.appingpot.tracker.TrackerDAO;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,11 +49,19 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginButton facebookLoginBtn;
     private CallbackManager callbackManager;
+    private String facebookToken;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private static final String ANONYMOUS_USER_TYPE = "anonymous";
     private static final String FACEBOOK_USER_TYPE = "facebook";
+
+    private boolean isNew = false;
+
+    private String getFacebookToken() {
+        final String token = this.facebookToken;
+        return token;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
+        initRealm();
         mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -67,6 +80,9 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
+                    if(isNew) {
+                        TrackerDAO.addUser(user.getProviderId(), user.getUid(), getFacebookToken());
+                    }
                     startActivity(new Intent(getApplication(), MainActivity.class));
                     LoginActivity.this.finish();
                 } else {
@@ -74,7 +90,6 @@ public class LoginActivity extends AppCompatActivity {
                     LoginManager.getInstance().logOut();
                     Log.d("mAuthListener", "onAuthStateChanged:signed_out");
                 }
-
             }
         };
 
@@ -120,24 +135,32 @@ public class LoginActivity extends AppCompatActivity {
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
+                                isNew = true;
                                 Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
                                 if (!task.isSuccessful()) {
                                     Log.w(TAG, "signInAnonymously", task.getException());
                                     return;
                                 }
-                                UserService userService = RestClient.createService(UserService.class);
-                                Call<ResultInfo> call = userService.addUser(new UserInfo(ANONYMOUS_USER_TYPE, mAuth.getCurrentUser().getUid()));
-                                call.enqueue(new Callback<ResultInfo>(){
-                                    @Override
-                                    public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {
-                                        startActivity(new Intent(getApplication(), TutorialActivity.class));
-                                        LoginActivity.this.finish();
-                                    }
-                                    @Override
-                                    public void onFailure(Call<ResultInfo> call, Throwable t) {
-                                        // @TODO signout user from firebase
-                                    }
-                                 });
+                                try {
+                                    UserService userService = RestClient.createService(UserService.class);
+                                    Call<ResultInfo> call = userService.addUser(new UserInfo(ANONYMOUS_USER_TYPE, mAuth.getCurrentUser().getUid(),
+                                            FirebaseInstanceId.getInstance().getToken()));
+                                    call.enqueue(new Callback<ResultInfo>() {
+                                        @Override
+                                        public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {
+                                            startActivity(new Intent(getApplication(), TutorialActivity.class));
+                                            LoginActivity.this.finish();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ResultInfo> call, Throwable t) {
+                                            // @TODO signout user from firebase
+                                        }
+                                    });
+
+                                } catch(Exception e){
+                                    e.printStackTrace();
+                                }
                             }
                         });
             }
@@ -148,18 +171,23 @@ public class LoginActivity extends AppCompatActivity {
         final String TAG = "hdfbAccessToken";
         Log.d(TAG, "handleFacebookAccessToken:" + token);
         Log.d(TAG, "facebookToken: " + token.getToken());
+        this.facebookToken = token.getToken();
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull final Task<AuthResult> task) {
+                        isNew = true;
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
                         progressBarStatus = 70;
 
                         UserService userService = RestClient.createService(UserService.class);
-                        Call<ResultInfo> call = userService.addUser(new UserInfo(FACEBOOK_USER_TYPE, mAuth.getCurrentUser().getUid()));
+                        Log.d(TAG, "signInWithCredential:addUser");
+                        TrackerDAO.addUser(mAuth.getCurrentUser().getProviderId(),mAuth.getCurrentUser().getUid(), facebookToken);
+                        Call<ResultInfo> call = userService.addUser(new UserInfo(FACEBOOK_USER_TYPE, mAuth.getCurrentUser().getUid(),
+                                FirebaseInstanceId.getInstance().getToken()));
                         call.enqueue(new Callback<ResultInfo>(){
                             @Override
                             public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {
@@ -215,4 +243,12 @@ public class LoginActivity extends AppCompatActivity {
             progressBar.dismiss();
         }
     }
+    private void initRealm(){
+        RealmConfiguration config =
+                new RealmConfiguration.Builder(this)
+                        .deleteRealmIfMigrationNeeded()
+                        .build();
+        Realm.setDefaultConfiguration(config);
+    }
+
 }
