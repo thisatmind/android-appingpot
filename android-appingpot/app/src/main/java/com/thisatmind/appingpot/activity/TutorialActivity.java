@@ -3,6 +3,7 @@ package com.thisatmind.appingpot.activity;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,8 @@ public class TutorialActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutorial);
+
+        setIsLogin(this, true);
 
         if(!isGranted()) { getGrant(); }
         mPager = (ViewPager) findViewById(R.id.tutorial_pager);
@@ -120,5 +123,12 @@ public class TutorialActivity extends AppCompatActivity{
     private void getGrant(){
         Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
         startActivity(intent);
+    }
+    public void setIsLogin(Context context, boolean isLogin){
+        SharedPreferences sharedPreference
+                = context.getSharedPreferences("Session", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreference.edit();
+        editor.putBoolean("isLogin", isLogin);
+        editor.apply();
     }
 }

@@ -1,5 +1,7 @@
 package com.thisatmind.appingpot.activity;
 
+import android.app.AppOpsManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -42,9 +44,24 @@ public class MainActivity extends AppCompatActivity  implements FragmentDrawer.F
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         realm = Realm.getDefaultInstance();
+
+        if(isGranted()) getGrant();
+
         initViews();
     }
 
+    private boolean isGranted(){
+        AppOpsManager appOps = (AppOpsManager) this
+                .getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOps.checkOpNoThrow("android:get_usage_stats",
+                android.os.Process.myUid(), this.getPackageName());
+        return mode == AppOpsManager.MODE_ALLOWED;
+    }
+
+    private void getGrant(){
+        Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+        startActivity(intent);
+    }
     @Override
     public void onDrawerItemSelected(View view, int position) {
         displayView(position);

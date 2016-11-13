@@ -60,7 +60,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final String ANONYMOUS_USER_TYPE = "anonymous";
     private static final String FACEBOOK_USER_TYPE = "facebook";
 
-    private boolean isNew = false;
     private final Context context = this;
     private String getFacebookToken() {
         final String token = this.facebookToken;
@@ -86,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 // User is signed in
                 if (user != null) {
-                    if(!isNew && getIsLogin(context)){
+                    if(getIsLogin(context)){
 //                        TrackerDAO.addUser(user.getProviderId(), user.getUid(), getFacebookToken());
                         startActivity(new Intent(getApplication(), MainActivity.class));
                         LoginActivity.this.finish();
@@ -106,7 +105,6 @@ public class LoginActivity extends AppCompatActivity {
         facebookLoginBtn.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                isNew = true;
                 progressBar = new ProgressDialog(LoginActivity.this);
                 progressBar.setMessage("Facebook login");
                 progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -265,12 +263,5 @@ public class LoginActivity extends AppCompatActivity {
     public boolean getIsLogin(Context context){
         return context.getSharedPreferences("Session", Context.MODE_PRIVATE)
                 .getBoolean("isLogin", false);
-    }
-    public void setIsLogin(Context context, boolean isLogin){
-        SharedPreferences sharedPreference
-                = context.getSharedPreferences("Session", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreference.edit();
-        editor.putBoolean("isLogin", isLogin);
-        editor.apply();
     }
 }

@@ -19,6 +19,7 @@ import com.thisatmind.appingpot.adapter.HomeAdapter;
 import com.thisatmind.appingpot.fragment.pojo.RecoCard;
 import com.thisatmind.appingpot.fragment.pojo.TodayCard;
 import com.thisatmind.appingpot.models.Event;
+import com.thisatmind.appingpot.models.Usage;
 import com.thisatmind.appingpot.pojo.AppCount;
 import com.thisatmind.appingpot.rest.RestClient;
 import com.thisatmind.appingpot.rest.model.EventList;
@@ -31,8 +32,12 @@ import com.thisatmind.appingpot.tracker.TrackerDAO;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -62,27 +67,47 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(new HomeAdapter(getItems()));
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
 
-        saveUsageData();
-        uploadUsageList(TrackerDAO.modelUsageListToRestUsageList(TrackerDAO.getUsageList(
-                TrackerDAO.getUsageStartPoint(getContext())
-        )));
-        TrackerDAO.setUsageStartPoint(getContext(), TrackerDAO.getHourBefore(Tracker.getUsageStartPoint(getContext())));
-        saveEventData();
-        uploadEventList(TrackerDAO.modelEventToRestEventList(TrackerDAO.getEventList(
-                TrackerDAO.getEventStartPoint(getContext())
-        )));
-        TrackerDAO.setEventStartPoint(getContext(), TrackerDAO.getHourBefore(Tracker.getEventStartPoint(getContext())));
+        try{
+            saveUsageData();
+            uploadUsageList(TrackerDAO.modelUsageListToRestUsageList(TrackerDAO.getUsageList(
+                    TrackerDAO.getUsageStartPoint(getContext())
+            )));
+            TrackerDAO.setUsageStartPoint(getContext(), TrackerDAO.getHourBefore(Tracker.getUsageStartPoint(getContext())));
+            saveEventData();
+            uploadEventList(TrackerDAO.modelEventToRestEventList(TrackerDAO.getEventList(
+                    TrackerDAO.getEventStartPoint(getContext())
+            )));
+            TrackerDAO.setEventStartPoint(getContext(), TrackerDAO.getHourBefore(Tracker.getEventStartPoint(getContext())));
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
         return rootView;
     }
 
+    private List<RecoCard> getRecoCards() {
+        final String TAG = "getRecoCards ";
+        Log.d(TAG, "start");
+        Realm realm = Realm.getDefaultInstance();
+
+        RealmQuery<com.thisatmind.appingpot.models.RecoCard> query =
+                realm.where(com.thisatmind.appingpot.models.RecoCard.class);
+        RealmResults<com.thisatmind.appingpot.models.RecoCard> result = query.findAll();
+
+        if(result.isEmpty()) return null;
+
+        List<RecoCard> list = new ArrayList<>();
+        for(int i = 0; i < result.size(); i++) {
+            com.thisatmind.appingpot.models.RecoCard data = result.get(i);
+            list.add(new RecoCard(data.getUserId(), data.getKey(), data.getTitle(), data.getIcon(), data.getMarketUrl()));
+        }
+        return list;
+    }
+
     private List<Object> getItems(){
+
         ArrayList<Object> list = new ArrayList<>();
-        list.add(new RecoCard("토스", "https://lh3.googleusercontent.com/R2IN1j3Um3mttEwE4wCBgwlntTOoDCevffLdK-IsYA0kn8KA21OoKx4KAGNVB-jw7Mk=w300-rw", "viva.republica.toss"));
-        list.add(new RecoCard("자소설닷컴", "https://lh3.googleusercontent.com/6wjXIkv0r7ETwf2ewj3kupCjneQbiuSftzTte5ZXrjErMztjmeH4lrGwJqLa43VUkDU=w300-rw", "com.anchoreer.jasoseol"));
-        list.add(new RecoCard("it알려줌", "https://lh3.googleusercontent.com/bQExpSSf4T7_XW23qTOOump2iEQJ_pWqebgUYwWsdRk-gcIM6nVLGLTF6WWk4hwW7KE=w300-rw", "com.allyeozum.android.allyeozumit"));
-        list.add(new RecoCard("YBM TOEIC Speaking Test", "https://lh3.googleusercontent.com/jFNT6jHS9yKxKhNOrpWL9FbRuMsDIxcrTaJZ3s6tXnZjK1GYQkaMZmt7SNolMQWboA=w300-rw", "com.ybmsisa.TosEx"));
-        list.add(new RecoCard("잡코리아", "https://lh4.ggpht.com/BGoj8lgJy-VLSzkSyidpvpqrtICgQjFuOAe6GSdD_tlnZJobUeTw_-49OihHPzFnrvM=w300-rw", "com.jobkorea.app"));
-        list.add(new RecoCard("Airbnb", "https://lh3.googleusercontent.com/BQnvuZR500pg2ulvv3FBmRI93ODz3AjNfbz92hCieuJLvmbGY36AKhETMTTfTDgpPQI=w300-rw", "com.airbnb.android"));
+
+        list.addAll(getRecoCards());
         list.add(new TodayCard("카카오톡", "100"));
         return list;
     }

@@ -15,5 +15,5 @@ public interface RecoService {
 
     @POST("reco")
     Call<ResultInfo> addRecoResult(@Body RecoResult result);
-}
+
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,11 +15,14 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.thisatmind.appingpot.R;
+import com.thisatmind.appingpot.activity.MainActivity;
 import com.thisatmind.appingpot.fragment.HomeFragment;
 import com.thisatmind.appingpot.fragment.pojo.RecoCard;
 import com.thisatmind.appingpot.fragment.pojo.RemoveCard;
 import com.thisatmind.appingpot.fragment.pojo.TodayCard;
+import com.thisatmind.appingpot.models.Event;
 
 import java.util.List;
 
@@ -87,7 +91,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         switch (viewHolder.getItemViewType()) {
             case RECO:
                 HomeFragment.RecoCardViewHolder recoViewHolder = (HomeFragment.RecoCardViewHolder) viewHolder;
-                initRecoCardViewHolder(recoViewHolder, position);
+                initRecoCardViewHolder(recoViewHolder, position, context);
                 break;
             case TODAY:
                 HomeFragment.TodayCardViewHolder todayViewHolder = (HomeFragment.TodayCardViewHolder) viewHolder;
@@ -101,7 +105,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    private void initRecoCardViewHolder(final HomeFragment.RecoCardViewHolder vh, int position) {
+    private void initRecoCardViewHolder(final HomeFragment.RecoCardViewHolder vh, int position, final Context context) {
         final RecoCard recoCard = (RecoCard) items.get(position);
         if(recoCard != null){
             Glide.with(context)
@@ -133,6 +137,17 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("market://details?id=" + recoCard.getInstallLink()));
                     context.startActivity(intent);
+                }
+            });
+            vh.getInstallBtn().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle params = new Bundle();
+                    params.putString( FirebaseAnalytics.Param.ITEM_ID, "Recomendation Install" );
+                    params.putString( FirebaseAnalytics.Param.ITEM_CATEGORY, recoCard.getAppName());
+                    params.putString( FirebaseAnalytics.Param.VALUE, recoCard.getRecoId());
+                    FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(context);
+                    analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params );
                 }
             });
         }

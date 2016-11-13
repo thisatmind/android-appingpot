@@ -13,14 +13,16 @@ public class RecoCard extends RealmObject {
         @PrimaryKey
         @Required
         private String key;
+        private String userId;
         private String packageName;
         private String title;
         private String icon;
         private String marketUrl;
 
         public RecoCard(){}
-        public RecoCard(String key, String packageName, String title, String icon, String marketUrl) {
+        public RecoCard(String key, String userId, String packageName, String title, String icon, String marketUrl) {
                 this.key = key;
+                this.userId = userId;
                 this.packageName = packageName;
                 this.title = title;
                 this.icon = icon;
@@ -33,6 +35,14 @@ public class RecoCard extends RealmObject {
 
         public void setKey(String key) {
                 this.key = key;
+        }
+
+        public String getUserId() {
+                return userId;
+        }
+
+        public void setUserId(String userId) {
+                this.userId = userId;
         }
 
         public String getPackageName() {
