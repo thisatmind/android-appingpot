@@ -21,14 +21,16 @@ import com.thisatmind.appingpot.fragment.pojo.TodayCard;
 import com.thisatmind.appingpot.models.Event;
 import com.thisatmind.appingpot.pojo.AppCount;
 import com.thisatmind.appingpot.rest.RestClient;
+import com.thisatmind.appingpot.rest.model.EventList;
 import com.thisatmind.appingpot.rest.model.ResultInfo;
-import com.thisatmind.appingpot.rest.model.Usage;
 import com.thisatmind.appingpot.rest.model.UsageList;
+import com.thisatmind.appingpot.rest.service.EventService;
 import com.thisatmind.appingpot.rest.service.UsageService;
 import com.thisatmind.appingpot.tracker.Tracker;
 import com.thisatmind.appingpot.tracker.TrackerDAO;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -59,8 +61,17 @@ public class HomeFragment extends Fragment {
         this.recyclerView = (RecyclerView)rootView.findViewById(R.id.home_recycler_view);
         recyclerView.setAdapter(new HomeAdapter(getItems()));
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
+
         saveUsageData();
-        uploadUsageList(TrackerDAO.modelUsageListToRestUsageList(TrackerDAO.getUsageList(0)));
+        uploadUsageList(TrackerDAO.modelUsageListToRestUsageList(TrackerDAO.getUsageList(
+                TrackerDAO.getUsageStartPoint(getContext())
+        )));
+        TrackerDAO.setUsageStartPoint(getContext(), TrackerDAO.getHourBefore(Tracker.getUsageStartPoint(getContext())));
+        saveEventData();
+        uploadEventList(TrackerDAO.modelEventToRestEventList(TrackerDAO.getEventList(
+                TrackerDAO.getEventStartPoint(getContext())
+        )));
+        TrackerDAO.setEventStartPoint(getContext(), TrackerDAO.getHourBefore(Tracker.getEventStartPoint(getContext())));
         return rootView;
     }
 
@@ -83,6 +94,7 @@ public class HomeFragment extends Fragment {
         TrackerDAO.saveEventPerHour(Tracker.calcEventPerHour(uEvents,
                 Tracker.getEventStartPoint(getContext())));
         long timer = Tracker.calcEventStartPoint(uEventsTimer);
+
         Tracker.setEventStartPoint(getContext(), timer);
         Log.d("saveEventData", "saved event data");
     }
@@ -95,6 +107,7 @@ public class HomeFragment extends Fragment {
                 Tracker.getUsageStartPoint(getContext())
         ));
         long timer = Tracker.calcUsageStartPoint(uEventsTimer);
+
         Tracker.setUsageStartPoint(getContext(), timer);
         Log.d("saveUsageData", "saved usage data");
     }
@@ -106,6 +119,24 @@ public class HomeFragment extends Fragment {
         return null;
     }
 
+    public void uploadEventList(EventList list) {
+        EventService service = RestClient.createService(EventService.class);
+        Call<ResultInfo> call = service.addEventList(list);
+        try{
+            call.enqueue(new Callback<ResultInfo>() {
+                @Override
+                public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {
+                    Log.d("uploadEventList", response.raw().toString());
+                }
+                @Override
+                public void onFailure(Call<ResultInfo> call, Throwable t) {
+
+                }
+            });
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void uploadUsageList(UsageList list){
         UsageService service = RestClient.createService(UsageService.class);
         Call<ResultInfo> call = service.addUsageList(list);
@@ -114,7 +145,6 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {
                     Log.d("uploadUsageList", response.raw().toString());
-                    Log.d("uploadUsageList", response.body().getMessage());
                 }
                 @Override
                 public void onFailure(Call<ResultInfo> call, Throwable t) {

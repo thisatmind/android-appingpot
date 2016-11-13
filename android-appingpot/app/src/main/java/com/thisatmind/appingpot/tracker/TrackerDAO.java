@@ -1,14 +1,19 @@
 package com.thisatmind.appingpot.tracker;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.provider.CalendarContract;
 import android.util.Log;
 
 import com.thisatmind.appingpot.models.Event;
 import com.thisatmind.appingpot.models.Usage;
 import com.thisatmind.appingpot.models.User;
+import com.thisatmind.appingpot.rest.model.EventList;
 import com.thisatmind.appingpot.rest.model.UsageList;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -170,10 +175,40 @@ public class TrackerDAO {
         return result.get(0);
     }
 
+    public static List<Event> getEventList(long startTime) {
+        Log.d("getEventList", "it is here");
+
+        RealmQuery<Event> query = Realm.getDefaultInstance()
+                .where(Event.class).greaterThan("date", startTime)
+                .lessThan("date", getOnTime(new Date().getTime()));
+
+        RealmResults<Event> result = query.findAll().sort("packageName");
+        for (int i = 0; i < result.size(); i++) {
+            Log.d("getEventList", result.get(i).toString());
+        }
+        return result;
+    }
+
+    public static EventList modelEventToRestEventList(List<Event> list) {
+        String userId = getUser().getFirebaseToken();
+        List<com.thisatmind.appingpot.rest.model.Event> result = new ArrayList<>();
+        for(int i = 0; i < list.size(); i++){
+            Event data = list.get(i);
+            com.thisatmind.appingpot.rest.model.Event event = new com.thisatmind.appingpot.rest.model.Event();
+            event.setCount(data.getCount());
+            event.setPackageName(data.getPackageName());
+            event.setCreatedDate(data.getDate());
+            event.setUserId(userId);
+            result.add(event);
+        }
+        return new EventList(result);
+    }
+
     public static List<Usage> getUsageList(long startTime) {
         Log.d("getUsageList", "it's here");
         RealmQuery<Usage> query = Realm.getDefaultInstance()
-                .where(Usage.class).greaterThan("date", startTime);
+                .where(Usage.class).greaterThan("date", startTime)
+                .lessThan("date", getOnTime(new Date().getTime()));
 
         RealmResults<Usage> result = query.findAll().sort("packageName");
         for(int i = 0; i < result.size(); i++){
@@ -182,13 +217,33 @@ public class TrackerDAO {
         return result;
     }
 
+    public static long getOnTime(long time){
+        Calendar date = Calendar.getInstance();
+        date.setTimeInMillis(time);
+        date.set(Calendar.MILLISECOND, 0);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MINUTE, 0);
+        return date.getTimeInMillis();
+    }
+
+    public static long getHourBefore(long time){
+        Calendar date = Calendar.getInstance();
+        long hourBeforeStartTime = time - 1000 * 60 * 60;
+        date.setTimeInMillis(hourBeforeStartTime);
+        date.set(Calendar.MILLISECOND, 0);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MINUTE, 0);
+        return date.getTimeInMillis();
+    }
+
     public static UsageList modelUsageListToRestUsageList(List<Usage> list){
-        String firebaseToken = getUser().getFirebaseToken();
+
+        String userId = TrackerDAO.getUser().getFirebaseToken();
         List<com.thisatmind.appingpot.rest.model.Usage> result = new ArrayList<>();
         for(int i = 0; i < list.size(); i++){
             Usage data = list.get(i);
             com.thisatmind.appingpot.rest.model.Usage usage = new com.thisatmind.appingpot.rest.model.Usage();
-            usage.setUserId(firebaseToken);
+            usage.setUserId(userId);
             usage.setPackageName(data.getPackageName());
             usage.setUsage(data.getUsage());
             usage.setDate(data.getDate());
@@ -198,5 +253,27 @@ public class TrackerDAO {
     }
 
 
+    public static long getEventStartPoint(Context context){
+        return context.getSharedPreferences("Rest", Context.MODE_PRIVATE)
+                .getLong("eventStartPoint", 0);
+    }
+    public static void setEventStartPoint(Context context, long startPoint){
+        SharedPreferences sharedPreference
+                = context.getSharedPreferences("Rest", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreference.edit();
+        editor.putLong("eventStartPoint", startPoint);
+        editor.apply();
+    }
+    public static long getUsageStartPoint(Context context){
+        return context.getSharedPreferences("Rest", Context.MODE_PRIVATE)
+                .getLong("usageStartPoint", 0);
+    }
+    public static void setUsageStartPoint(Context context, long startPoint){
+        SharedPreferences sharedPreference
+                = context.getSharedPreferences("Rest", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreference.edit();
+        editor.putLong("usageStartPoint", startPoint);
+        editor.apply();
+    }
 
 }

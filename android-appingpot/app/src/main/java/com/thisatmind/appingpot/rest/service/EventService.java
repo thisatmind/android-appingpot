@@ -2,6 +2,7 @@ package com.thisatmind.appingpot.rest.service;
 
 import com.thisatmind.appingpot.rest.model.AppInfo;
 import com.thisatmind.appingpot.rest.model.EventList;
+import com.thisatmind.appingpot.rest.model.ResultInfo;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -20,6 +21,6 @@ public interface EventService {
     @POST("app")
     Call<AppInfo> addAppInfo(@Body AppInfo appInfo);
 
-    @POST("test")
-    Call<AppInfo> postEventList(@Body EventList eventList);
+    @POST("count")
+    Call<ResultInfo> addEventList(@Body EventList eventList);
 }

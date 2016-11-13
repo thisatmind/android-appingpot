@@ -1,6 +1,10 @@
 package com.thisatmind.appingpot.activity;
 
+import android.app.AppOpsManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -24,6 +28,7 @@ public class TutorialActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutorial);
 
+        if(!isGranted()) { getGrant(); }
         mPager = (ViewPager) findViewById(R.id.tutorial_pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
@@ -102,5 +107,18 @@ public class TutorialActivity extends AppCompatActivity{
                 view.setAlpha(0);
             }
         }
+    }
+
+    private boolean isGranted(){
+        AppOpsManager appOps = (AppOpsManager) this
+                .getSystemService(Context.APP_OPS_SERVICE);
+        int mode = appOps.checkOpNoThrow("android:get_usage_stats",
+                android.os.Process.myUid(), this.getPackageName());
+        return mode == AppOpsManager.MODE_ALLOWED;
+    }
+
+    private void getGrant(){
+        Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+        startActivity(intent);
     }
 }

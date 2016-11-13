@@ -26,12 +26,6 @@ public class Event extends RealmObject {
         this.count = count;
     }
 
-    public com.thisatmind.appingpot.rest.model.Event getPojo(){
-        return new com.thisatmind.appingpot.rest.model.Event(
-                this.key,this.packageName,this.date,this.count
-        );
-    }
-
     public String getPackageName() {
         return packageName;
     }

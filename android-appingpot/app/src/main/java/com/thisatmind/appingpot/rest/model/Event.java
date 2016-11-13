@@ -7,21 +7,29 @@ package com.thisatmind.appingpot.rest.model;
 public class Event {
 
 
-    private String key;
+    private String userId;
 
     private String packageName;
 
-    private long date;
-
     private int count;
+
+    private long createdDate;
 
     public Event(){}
 
-    public Event(String key, String packageName, long date, int count){
-        this.key = key;
+    public Event(String userId, String packageName, int count, long createdDate) {
+        this.userId = userId;
         this.packageName = packageName;
-        this.date = date;
         this.count = count;
+        this.createdDate = createdDate;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getPackageName() {
@@ -32,14 +40,6 @@ public class Event {
         this.packageName = packageName;
     }
 
-    public long getDate() {
-        return date;
-    }
-
-    public void setDate(long date) {
-        this.date = date;
-    }
-
     public int getCount() {
         return count;
     }
@@ -48,11 +48,11 @@ public class Event {
         this.count = count;
     }
 
-    public String getKey() { return key; }
+    public long getCreatedDate() {
+        return createdDate;
+    }
 
-    public void setKey(String key) { this.key = key; }
-
-    public String genKey(String packageName, long date){
-        return packageName + date;
+    public void setCreatedDate(long createdDate) {
+        this.createdDate = createdDate;
     }
 }

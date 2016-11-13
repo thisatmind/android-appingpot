@@ -1,5 +1,8 @@
 package com.thisatmind.appingpot.rest;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -47,4 +50,5 @@ public class RestClient {
 
         return retrofit.create(serviceClass);
     }
+
 }

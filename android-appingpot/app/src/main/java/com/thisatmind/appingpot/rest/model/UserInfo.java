@@ -7,14 +7,16 @@ package com.thisatmind.appingpot.rest.model;
 public class UserInfo {
 
     String userType;
-    String firebaseToken;
+    String firebaseId;
+    String facebookToken;
     String deviceToken;
 
     public UserInfo(){}
 
-    public UserInfo(String userType, String firebaseToken, String deviceToken) {
+    public UserInfo(String userType, String firebaseId, String facebookToken, String deviceToken) {
         this.userType = userType;
-        this.firebaseToken = firebaseToken;
+        this.firebaseId = firebaseId;
+        this.facebookToken = facebookToken;
         this.deviceToken = deviceToken;
     }
 
@@ -26,12 +28,20 @@ public class UserInfo {
         this.userType = userType;
     }
 
-    public String getFirebaseToken() {
-        return firebaseToken;
+    public String getFirebaseId() {
+        return firebaseId;
     }
 
-    public void setFirebaseToken(String firebaseToken) {
-        this.firebaseToken = firebaseToken;
+    public void setFirebaseId(String firebaseId) {
+        this.firebaseId = firebaseId;
+    }
+
+    public String getFacebookToken() {
+        return facebookToken;
+    }
+
+    public void setFacebookToken(String facebookToken) {
+        this.facebookToken = facebookToken;
     }
 
     public String getDeviceToken() {

@@ -1,5 +1,8 @@
 package com.thisatmind.appingpot.rest.service;
 
+import android.bluetooth.BluetoothClass;
+
+import com.thisatmind.appingpot.rest.model.DeviceToken;
 import com.thisatmind.appingpot.rest.model.ResultInfo;
 import com.thisatmind.appingpot.rest.model.UserInfo;
 
@@ -17,6 +20,6 @@ public interface UserService {
     @POST("user/signup")
     Call<ResultInfo> addUser(@Body UserInfo userInfo);
 
-    @PUT("user/firebaseDeviceToken")
-    Call<ResultInfo> putFirebaseDeviceToken(@Body ResultInfo resultInfo);
+    @PUT("user/deviceToken")
+    Call<ResultInfo> putDeviceToken(@Body DeviceToken deviceToken);
 }

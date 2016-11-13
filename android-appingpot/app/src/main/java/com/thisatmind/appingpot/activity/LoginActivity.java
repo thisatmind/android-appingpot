@@ -1,9 +1,13 @@
 package com.thisatmind.appingpot.activity;
 
+import android.app.AppOpsManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -57,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String FACEBOOK_USER_TYPE = "facebook";
 
     private boolean isNew = false;
-
+    private final Context context = this;
     private String getFacebookToken() {
         final String token = this.facebookToken;
         return token;
@@ -71,6 +75,8 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
+
+
         initRealm();
         mAuth = FirebaseAuth.getInstance();
 
@@ -78,13 +84,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+                // User is signed in
                 if (user != null) {
-                    // User is signed in
-                    if(isNew) {
-                        TrackerDAO.addUser(user.getProviderId(), user.getUid(), getFacebookToken());
+                    if(!isNew && getIsLogin(context)){
+//                        TrackerDAO.addUser(user.getProviderId(), user.getUid(), getFacebookToken());
+                        startActivity(new Intent(getApplication(), MainActivity.class));
+                        LoginActivity.this.finish();
                     }
-                    startActivity(new Intent(getApplication(), MainActivity.class));
-                    LoginActivity.this.finish();
                 } else {
                     // User is signed out
                     LoginManager.getInstance().logOut();
@@ -100,6 +106,7 @@ public class LoginActivity extends AppCompatActivity {
         facebookLoginBtn.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                isNew = true;
                 progressBar = new ProgressDialog(LoginActivity.this);
                 progressBar.setMessage("Facebook login");
                 progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -130,7 +137,9 @@ public class LoginActivity extends AppCompatActivity {
         anonymousLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setIsLogin(context, true);
                 final String TAG = "anonymous login";
+                isNew = true;
                 mAuth.signInAnonymously()
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -144,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
                                 try {
                                     UserService userService = RestClient.createService(UserService.class);
                                     Call<ResultInfo> call = userService.addUser(new UserInfo(ANONYMOUS_USER_TYPE, mAuth.getCurrentUser().getUid(),
-                                            FirebaseInstanceId.getInstance().getToken()));
+                                            null, FirebaseInstanceId.getInstance().getToken()));
                                     call.enqueue(new Callback<ResultInfo>() {
                                         @Override
                                         public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {
@@ -179,6 +188,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull final Task<AuthResult> task) {
                         isNew = true;
+                        setIsLogin(context, true);
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
                         progressBarStatus = 70;
@@ -187,7 +197,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d(TAG, "signInWithCredential:addUser");
                         TrackerDAO.addUser(mAuth.getCurrentUser().getProviderId(),mAuth.getCurrentUser().getUid(), facebookToken);
                         Call<ResultInfo> call = userService.addUser(new UserInfo(FACEBOOK_USER_TYPE, mAuth.getCurrentUser().getUid(),
-                                FirebaseInstanceId.getInstance().getToken()));
+                                facebookToken, FirebaseInstanceId.getInstance().getToken()));
                         call.enqueue(new Callback<ResultInfo>(){
                             @Override
                             public void onResponse(Call<ResultInfo> call, Response<ResultInfo> response) {
@@ -198,7 +208,7 @@ public class LoginActivity extends AppCompatActivity {
                                         progressBar.setProgress(progressBarStatus);
                                     }
                                 });
-                                Log.d(TAG, "signin success : " + response.body().getMessage());
+                                Log.d(TAG, "signin success : ");
                                 startActivity(new Intent(getApplication(), TutorialActivity.class));
                                 LoginActivity.this.finish();
                             }
@@ -251,4 +261,16 @@ public class LoginActivity extends AppCompatActivity {
         Realm.setDefaultConfiguration(config);
     }
 
+
+    public boolean getIsLogin(Context context){
+        return context.getSharedPreferences("Session", Context.MODE_PRIVATE)
+                .getBoolean("isLogin", false);
+    }
+    public void setIsLogin(Context context, boolean isLogin){
+        SharedPreferences sharedPreference
+                = context.getSharedPreferences("Session", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreference.edit();
+        editor.putBoolean("isLogin", isLogin);
+        editor.apply();
+    }
 }
